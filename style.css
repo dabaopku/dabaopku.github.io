@@ -1,0 +1,573 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Comic Sans MS', '微软雅黑', sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #6ecbf5 0%, #059ee3 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.game-container {
+    width: 1000px;
+    max-width: 1000px;
+    min-height: 680px;
+    height: 680px;
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    overflow: visible; /* 允许工具箱等元素显现在容器外部 */
+}
+
+/* 页签样式 */
+.tabs {
+    display: flex;
+    gap: 8px;
+    padding: 12px 0 0 0;
+    justify-content: center;
+    position: relative;
+    z-index: 200;
+    margin-bottom: 10px;
+    height: 56px; /* 增加页签高度 */
+    align-items: center;
+}
+.tab-btn {
+    background: #ffffffaa;
+    border: 1px solid rgba(0,0,0,0.08);
+    padding: 8px 14px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: bold;
+}
+.tab-btn.active {
+    background: linear-gradient(90deg,#6ecbf5,#7b68ee);
+    color: #fff;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+}
+
+/* 面板显示控制 */
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* 工具箱（右上角） */
+.toolbox {
+    position: absolute;
+    /* 完全放到容器左侧外部，避免遮挡下方物品 */
+    left: -72px; /* 负值将工具箱移到左边框外（工具箱宽度约56px，加间距） */
+    bottom: 28px;
+    z-index: 60;
+}
+.tool-basket {
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    background: linear-gradient(135deg,#ffd59e,#ffb199);
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+    cursor: grab;
+    user-select: none;
+}
+
+/* 工具箱内的图片样式 */
+.tool-basket .tool-basket-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+    display: block;
+    pointer-events: none; /* 不让图片阻止拖拽 */
+}
+
+/* 动态放置区：相对定位，用于放置绝对定位篮子 */
+.dynamic-area {
+    position: relative;
+    min-height: 260px;
+    margin: 20px;
+    border-radius: 12px;
+    background: linear-gradient(180deg,#ffffff,#f2fbff);
+    border: 2px dashed rgba(74,144,226,0.25);
+    overflow: visible;
+}
+
+/* 动态创建的篮子样式（绝对定位）*/
+.dynamic-basket {
+    position: absolute;
+    width: auto; /* 自动宽度，随内容扩展 */
+    min-width: 120px; /* 最小宽度，防止太窄 */
+    max-width: none; /* 不限制最大宽度 */
+    padding: 8px;
+    border-radius: 12px;
+    background: linear-gradient(135deg,#fffef9,#ffe6b3);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+    text-align: center;
+    cursor: move;
+    transform: translate(-50%,-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    z-index: 40;
+}
+.dynamic-basket .basket-icon {
+    font-size: 28px;
+    width: 48px;
+    height: 48px;
+    margin: 6px auto 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    background: linear-gradient(135deg,#fff8e6,#ffe0a8);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+/* 图片版篮子样式（用于动态创建的篮子） */
+.dynamic-basket .basket-icon .basket-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    object-fit: cover;
+    display: block;
+}
+.dynamic-basket .basket-title {
+    font-size: 13px;
+    color: #444;
+    text-align: center;
+    padding-bottom: 6px;
+}
+.dynamic-basket .basket-items {
+    display: flex;
+    flex-wrap: nowrap; /* 不换行 */
+    gap: 6px;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 6px;
+    min-height: 76px;
+    height: 76px; /* 固定高度 */
+    box-sizing: border-box;
+    overflow: hidden; /* 不出现滚动条 */
+    width: auto; /* 自动宽度，随内容扩展 */
+    max-width: none;
+}
+.basket-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: flex-start; /* 横向排列，左对齐 */
+    padding: 6px;
+    min-height: 76px; /* 64px图标高度 + 2*6px内边距和gap，防止拉伸跳变 */
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.basket-item-icon {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.9);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* 保证工具箱不遮挡原有布局 */
+#tab-dynamic .game-container { position: relative; }
+
+.header {
+    background: linear-gradient(to right, #4a90e2, #7b68ee);
+    color: white;
+    text-align: center;
+    padding: 15px;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.instructions {
+    padding: 15px;
+    text-align: center;
+    background-color: #f0f8ff;
+    font-size: 18px;
+    color: #333;
+    border-bottom: 2px dashed #4a90e2;
+}
+
+.baskets-container {
+    display: flex;
+    justify-content: space-around;
+    padding: 20px;
+    background-color: #e6f7ff;
+}
+
+.basket {
+    width: 22%;
+    text-align: center;
+    padding: 10px;
+    border-radius: 15px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+}
+
+.basket:hover {
+    transform: translateY(-5px);
+}
+
+.basket-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    /* 为 3D 提供透视 */
+    perspective: 500px;
+}
+
+/* 新增 .three-icon 样式（将 Three.js 渲染区尺寸和响应式处理），其余样式保持不变。把下面片段合并到合适位置（例如 .basket-icon 样式之后）。 */
+.three-icon {
+    width: 72px;
+    height: 72px;
+    display: block;
+    border-radius: 8px;
+    overflow: hidden;
+    /* Three.js 渲染的 canvas 会填充此容器 */
+    background: transparent;
+    pointer-events: none; /* 使图标不干扰拖拽交互 */
+}
+
+/* 适当调整篮子图标容器，使三维图标居中 */
+.basket-icon { display:flex; align-items:center; justify-content:center; }
+
+/* 响应式微调 */
+@media (max-width: 768px) {
+    .three-icon { width: 56px; height: 56px; }
+    /* 小屏幕时把工具箱放回可视区域，避免被遮挡或无法操作 */
+    .toolbox { left: 12px; bottom: 12px; }
+}
+
+/* 公共 3D 结构 */
+.cube3d, .cuboid3d {
+    position: relative;
+    transform-style: preserve-3d;
+    transform: rotateX(20deg) rotateY(-20deg);
+    margin: 0 auto;
+}
+
+/* 正方体大小（深度与宽高一致）*/
+.cube3d {
+    width: 56px;
+    height: 56px;
+}
+.cube3d .face {
+    width: 100%;
+    height: 100%;
+}
+
+/* 长方体（薄一点的深度，宽高不同）*/
+.cuboid3d {
+    width: 68px;
+    height: 48px;
+}
+.cuboid3d .face {
+    width: 100%;
+    height: 100%;
+    /* 让长方体面颜色略有不同以更显立体 */
+}
+
+/* 公共面样式 */
+.face {
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: linear-gradient(135deg, #4a90e2, #7b68ee);
+    border: 1px solid rgba(0,0,0,0.12);
+    box-shadow: inset 0 2px 6px rgba(255,255,255,0.06);
+    opacity: 0.98;
+    border-radius: 4px;
+}
+
+/* 通过不同 transform 值设置深度：cubeDepth / cuboidDepth 分别取值 */
+.cube3d .front  { transform: translateZ(28px); }
+.cube3d .back   { transform: rotateY(180deg) translateZ(28px); }
+.cube3d .right  { transform: rotateY(90deg) translateZ(28px); }
+.cube3d .left   { transform: rotateY(-90deg) translateZ(28px); }
+.cube3d .top    { transform: rotateX(90deg) translateZ(28px); }
+.cube3d .bottom { transform: rotateX(-90deg) translateZ(28px); }
+
+/* 长方体使用更小的深度以表现“扁长” */
+.cuboid3d .front  { transform: translateZ(12px); }
+.cuboid3d .back   { transform: rotateY(180deg) translateZ(12px); }
+.cuboid3d .right  { transform: rotateY(90deg) translateZ(12px); width: 24px; left: calc(100% - 24px); }
+.cuboid3d .left   { transform: rotateY(-90deg) translateZ(12px); width: 24px; }
+.cuboid3d .top    { transform: rotateX(90deg) translateZ(12px); height: 24px; top: calc(-24px); }
+.cuboid3d .bottom { transform: rotateX(-90deg) translateZ(12px); height: 24px; top: calc(100% - 24px); }
+
+/* 给不同面略微不同的明暗，强调立体感 */
+.cube3d .back, .cuboid3d .back   { filter: brightness(0.85); }
+.cube3d .right, .cuboid3d .right { filter: brightness(0.9); }
+.cube3d .left, .cuboid3d .left   { filter: brightness(0.8); }
+.cube3d .top, .cuboid3d .top     { filter: brightness(1.05); }
+.cube3d .bottom, .cuboid3d .bottom { filter: brightness(0.95); }
+
+/* 小屏幕时调整尺寸以免遮挡 */
+@media (max-width: 768px) {
+    .cube3d { width: 44px; height: 44px; }
+    .cube3d .front  { transform: translateZ(22px); }
+    .cube3d .back   { transform: rotateY(180deg) translateZ(22px); }
+    .cube3d .right  { transform: rotateY(90deg) translateZ(22px); }
+    .cube3d .left   { transform: rotateY(-90deg) translateZ(22px); }
+    .cube3d .top    { transform: rotateX(90deg) translateZ(22px); }
+    .cube3d .bottom { transform: rotateX(-90deg) translateZ(22px); }
+
+    .cuboid3d { width: 56px; height: 38px; }
+    .cuboid3d .front { transform: translateZ(10px); }
+    .cuboid3d .back  { transform: rotateY(180deg) translateZ(10px); }
+    .cuboid3d .right { transform: rotateY(90deg) translateZ(10px); width: 20px; left: calc(100% - 20px); }
+    .cuboid3d .left  { transform: rotateY(-90deg) translateZ(10px); width: 20px; }
+    .cuboid3d .top   { transform: rotateX(90deg) translateZ(10px); height: 20px; top: calc(-20px); }
+    .cuboid3d .bottom{ transform: rotateX(-90deg) translateZ(10px); height: 20px; top: calc(100% - 20px); }
+}
+
+/* 圆柱 3D（简化视觉表现：上下椭圆 + 侧面渐变） */
+.cylinder3d {
+    position: relative;
+    width: 56px;
+    height: 56px;
+    transform-style: preserve-3d;
+    transform: rotateX(20deg) rotateY(-20deg);
+    margin: 0 auto;
+}
+.cylinder3d .top,
+.cylinder3d .bottom {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 18px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #7b68ee, #4a90e2);
+    border: 1px solid rgba(0,0,0,0.12);
+    box-shadow: inset 0 2px 6px rgba(255,255,255,0.06);
+}
+
+/* 顶面在前，底面翻转以表现厚度 */
+.cylinder3d .top {
+    top: -6px;
+    transform: translateZ(12px);
+}
+.cylinder3d .bottom {
+    bottom: -6px;
+    transform: rotateX(180deg) translateZ(12px);
+}
+
+/* 侧面：用一个矩形与径向渐变模拟圆弧 */
+.cylinder3d .body {
+    position: absolute;
+    left: 0;
+    top: 9px;
+    width: 100%;
+    height: calc(100% - 18px);
+    border-radius: 12px;
+    background: linear-gradient(90deg, #4a90e2 0%, #7b68ee 50%, #4a90e2 100%);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+    transform: translateZ(0);
+}
+
+/* 球体（利用径向渐变与高光模拟 3D） */
+.sphere3d {
+    position: relative;
+    width: 56px;
+    height: 56px;
+    transform-style: preserve-3d;
+    transform: rotateX(15deg) rotateY(-25deg);
+    margin: 0 auto;
+}
+.sphere3d .ball {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 25%, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.2) 6%, rgba(122,102,238,1) 30%, rgba(74,144,226,1) 100%);
+    box-shadow: inset -10px -6px 24px rgba(0,0,0,0.12), 0 6px 12px rgba(0,0,0,0.15);
+    border: 1px solid rgba(0,0,0,0.08);
+    transform: translateZ(0);
+}
+
+/* 明暗微调以匹配其它 3D 元素 */
+.cylinder3d .bottom, .sphere3d .ball { filter: brightness(0.95); }
+
+/* 响应式：缩小尺寸 */
+@media (max-width: 768px) {
+    .cylinder3d { width: 44px; height: 44px; }
+    .cylinder3d .top,
+    .cylinder3d .bottom { height: 14px; top: -4px; bottom: -4px; }
+    .cylinder3d .body { top: 7px; height: calc(100% - 14px); }
+
+    .sphere3d { width: 44px; height: 44px; }
+}
+
+.items-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 20px;
+    gap: 15px;
+    min-height: 300px;
+    background-color: #f9f9f9;
+}
+
+/* 抖动动画：用于错误放置时的视觉反馈 */
+.item.incorrect {
+    /* 同时执行抖动和红色光晕闪烁动画 */
+    animation: shake 0.7s cubic-bezier(.36,.07,.19,.97), glow 0.7s ease-in-out;
+    transform-origin: center;
+    /* 让光晕不是被裁剪的内阴影，而是外部发光 */
+    box-shadow: 0 0 0 rgba(255,0,0,0);
+}
+
+@keyframes shake {
+    0% { transform: translateX(0); }
+    10% { transform: translateX(-8px) rotate(-2deg); }
+    20% { transform: translateX(8px) rotate(2deg); }
+    30% { transform: translateX(-6px) rotate(-1deg); }
+    40% { transform: translateX(6px) rotate(1deg); }
+    50% { transform: translateX(-4px) rotate(-0.5deg); }
+    60% { transform: translateX(4px) rotate(0.5deg); }
+    70% { transform: translateX(-2px) rotate(-0.3deg); }
+    80% { transform: translateX(2px) rotate(0.3deg); }
+    90% { transform: translateX(-1px); }
+    100% { transform: translateX(0); }
+}
+
+/* 红色光晕动画：在中间阶段闪烁最强 */
+@keyframes glow {
+    0% { box-shadow: 0 0 0 rgba(255,0,0,0); }
+    30% { box-shadow: 0 0 6px rgba(255,0,0,0.6); }
+    50% { box-shadow: 0 0 14px rgba(255,0,0,0.95); }
+    70% { box-shadow: 0 0 6px rgba(255,0,0,0.6); }
+    100% { box-shadow: 0 0 0 rgba(255,0,0,0); }
+}
+
+.item {
+    width: 100px;
+    height: 100px;
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: grab;
+    transition: all 0.3s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+.item img {
+    max-width: 80%;
+    max-height: 80%;
+    object-fit: contain;
+}
+
+.item.dragging {
+    opacity: 0.7;
+    transform: scale(1.05);
+    cursor: grabbing;
+}
+
+.item.correct {
+    animation: correct 0.5s ease;
+}
+
+@keyframes correct {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); background-color: #90EE90; }
+    100% { transform: scale(1); }
+}
+
+.success-message {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.success-content {
+    background: linear-gradient(135deg, #ffd700, #ffa500);
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    color: white;
+    animation: pop 0.5s ease;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes pop {
+    0% { transform: scale(0.5); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.success-content h2 {
+    font-size: 48px;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.success-content p {
+    font-size: 24px;
+    margin-bottom: 30px;
+}
+
+.success-content button {
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    font-size: 20px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.success-content button:hover {
+    background-color: #3a80d2;
+}
+
+.counter {
+    text-align: center;
+    padding: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #4a90e2;
+    background-color: #e6f7ff;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .baskets-container {
+        flex-wrap: wrap;
+    }
+    
+    .basket {
+        width: 45%;
+        margin-bottom: 15px;
+    }
+    
+    .item {
+        width: 80px;
+        height: 80px;
+    }
+}
