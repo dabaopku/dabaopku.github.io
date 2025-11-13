@@ -63,6 +63,22 @@ body {
     bottom: 28px;
     z-index: 60;
 }
+
+/* 当工具箱出现在第一个页签的计数器旁时，使用静态内联布局 */
+#tab-dynamic .counter {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    justify-content: center;
+}
+
+#tab-dynamic .toolbox {
+    position: static; /* 覆盖默认绝对定位 */
+    margin-left: 8px;
+    display: inline-flex;
+    align-items: center;
+    z-index: 60;
+}
 .tool-basket {
     width: 56px;
     height: 56px;

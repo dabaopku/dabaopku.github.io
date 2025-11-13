@@ -1,0 +1,197 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Comic Sans MS', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    /* 更温柔的渐变配色，适合小孩子 */
+    background: linear-gradient(135deg, #FFE082 0%, #FFABAB 50%, #BDE0FE 100%);
+    color: #333;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+#container {
+    max-width: 900px;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 2.2rem;
+    color: #333;
+}
+
+#info {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.05rem;
+    color: #444;
+}
+
+#tabs {
+    display:flex;
+    justify-content:center;
+    gap:12px;
+    margin-bottom:10px;
+}
+.tab{
+    padding:8px 14px;
+    border-radius:10px;
+    background: linear-gradient(180deg, #fff, #f5f5ff);
+    border: 1px solid rgba(200,200,200,0.3);
+    cursor:pointer;
+    font-weight:700;
+}
+.tab.active{
+    background: linear-gradient(180deg, #FFECB3, #FFE082);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.06);
+}
+
+.legend {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 8px;
+}
+.legend .item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+}
+.dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    display: inline-block;
+    border: 2px solid rgba(255,255,255,0.6);
+}
+.radius-dot { background: #ff5722; }
+/* cylinder height (blue) – used only for cylinder legend */
+.cyl-height-dot { background: #2196f3; }
+/* generic height-dot now represents box height (green) */
+.height-dot { background: #66bb6a; }
+/* box handle colors: width (red) and depth (blue) — match js/box.js axes */
+.width-dot { background: #ff5252; }
+.depth-dot { background: #42a5f5; }
+
+#canvas-container {
+    width: 100%;
+    height: 500px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(250,250,255,0.6));
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    position: relative;
+    border: 2px solid rgba(200,200,255,0.4);
+}
+
+#cylinder-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+#controls {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.9), rgba(245,250,255,0.9));
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid rgba(200,200,200,0.3);
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* 增加长方体三个滑块（box-controls）之间的垂直间距 */
+#box-controls .control-group {
+    margin-bottom: 12px;
+}
+
+.control-group label {
+    width: 70px;
+    font-weight: bold;
+}
+
+.control-group input[type="range"] {
+    flex: 1;
+    height: 8px;
+    border-radius: 5px;
+    background: #ddd;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.control-group input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #FF8A80; /* 可爱粉色 */
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.control-group span {
+    width: 40px;
+    text-align: center;
+    font-weight: bold;
+}
+
+#reset-btn {
+    align-self: center;
+    padding: 10px 22px;
+    background: #FFD54F; /* 柠檬黄色 */
+    color: #333;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+    box-shadow: 0 6px 12px rgba(255,213,79,0.18);
+}
+
+#reset-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 18px rgba(255,213,79,0.22);
+}
+
+@media (max-width: 768px) {
+    #container {
+        padding: 15px;
+    }
+    
+    h1 {
+        font-size: 1.8rem;
+    }
+    
+    #canvas-container {
+        height: 400px;
+    }
+    
+    .control-group {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .control-group input[type="range"] {
+        width: 100%;
+    }
+}

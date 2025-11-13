@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>几何体分类游戏</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+	<div id="tab-dynamic" class="tab-panel active">
+		<div class="game-container">
+			<div class="header">
+				<h1>几何体分类游戏</h1>
+			</div>
+			<div class="tabs">
+				<button class="tab-btn active" data-tab="dynamic">活动一</button>
+				<button class="tab-btn" data-tab="original">活动二</button>
+			</div>
+
+			<div class="instructions">
+				<p></p>
+			</div>
+
+			<div class="counter">
+				已分类: <span id="items-counter-dynamic">0</span> / <span id="total-items-dynamic">8</span>
+
+				<div class="toolbox">
+					<div class="tool-basket" draggable="true" id="tool-basket" title="拖拽到画布以创建篮子">
+						<img src="img/basket.jpg" alt="篮子" class="tool-basket-img" draggable="false">
+					</div>
+				</div>
+			</div>
+
+			<div id="dynamic-area" class="dynamic-area"></div>
+
+			<div class="items-container" id="items-container-dynamic"></div>
+		</div>
+	</div>
+
+	<div id="tab-original" class="tab-panel">
+		<div class="game-container">
+			<div class="header">
+				<h1>几何体分类游戏</h1>
+			</div>
+			<div class="tabs">
+				<button class="tab-btn" data-tab="dynamic">活动一</button>
+				<button class="tab-btn active" data-tab="original">活动二</button>
+			</div>
+
+			<div class="instructions">
+				<p></p>
+			</div>
+
+			<div class="counter">
+				已分类: <span id="items-counter">0</span> / <span id="total-items">8</span>
+			</div>
+
+			<div class="baskets-container">
+				<div class="basket" data-type="cuboid">
+					<div class="basket-icon">
+						<div class="three-icon" data-shape="cuboid"></div>
+					</div>
+					<div class="basket-title">长方体</div>
+				</div>
+
+				<div class="basket" data-type="cube">
+					<div class="basket-icon">
+						<div class="three-icon" data-shape="cube"></div>
+					</div>
+					<div class="basket-title">正方体</div>
+				</div>
+
+				<div class="basket" data-type="cylinder">
+					<div class="basket-icon">
+						<div class="three-icon" data-shape="cylinder"></div>
+					</div>
+					<div class="basket-title">圆柱</div>
+				</div>
+
+				<div class="basket" data-type="sphere">
+					<div class="basket-icon">
+						<div class="three-icon" data-shape="sphere"></div>
+					</div>
+					<div class="basket-title">球</div>
+				</div>
+			</div>
+
+			<div class="items-container" id="items-container"></div>
+		</div>
+	</div>
+
+	<div id="success-message" class="success-message" aria-hidden="true">
+	  <div class="success-content">
+	    <h2>完成！</h2>
+	    <p>你已正确分类所有物品 🎉</p>
+	    <button id="success-restart">再来一次</button>
+	  </div>
+	</div>
+
+	<script src="js/three.min.js"></script>
+	<script src="js/data.js"></script>
+	<script src="js/three-icons.js"></script>
+	<script src="js/dynamic-tab.js"></script>
+	<script src="js/touch-drag.js"></script>
+	<script src="js/tabs.js"></script>
+	<script src="script.js"></script>
+</body>
+</html>

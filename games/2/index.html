@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D圆柱体编辑器</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="container">
+        <h1>3D 立体图形学习工具</h1>
+        <div id="tabs">
+            <button class="tab active" data-tab="cylinder">圆柱体</button>
+            <button class="tab" data-tab="box">长方体</button>
+        </div>
+        <div id="info">
+            <p>拖拽箭头调整圆柱体尺寸 | 在空白区域拖拽旋转视角</p>
+            <div class="legend">
+                <div class="item"><span class="dot radius-dot"></span> 拖拽橙色把手：调整半径</div>
+                <div class="item"><span class="dot cyl-height-dot"></span> 拖拽蓝色把手：调整高度</div>
+            </div>
+        </div>
+        <div id="canvas-container">
+            <canvas id="cylinder-canvas"></canvas>
+        </div>
+        <div id="controls">
+            <div id="cylinder-controls">
+            <div class="control-group">
+                <label for="radius">半径:</label>
+                <input type="range" id="radius" min="0.3" max="5" step="0.1" value="2">
+                <span id="radius-value">2.0</span>
+            </div>
+            <div class="control-group">
+                <label for="height">高度:</label>
+                <input type="range" id="height" min="1" max="10" step="0.1" value="4">
+                <span id="height-value">4.0</span>
+            </div>
+            </div>
+
+            <div id="box-controls" style="display:none;">
+                <div class="control-group">
+                    <label for="box-width">宽度:</label>
+                        <input type="range" id="box-width" min="0.3" max="12" step="0.1" value="4">
+                    <span id="box-width-value">4.0</span>
+                </div>
+                <div class="control-group">
+                    <label for="box-height">高度:</label>
+                    <input type="range" id="box-height" min="0.3" max="12" step="0.1" value="7">
+                    <span id="box-height-value">7.0</span>
+                </div>
+                <div class="control-group">
+                    <label for="box-depth">深度:</label>
+                    <input type="range" id="box-depth" min="0.3" max="12" step="0.1" value="6">
+                    <span id="box-depth-value">6.0</span>
+                </div>
+
+            </div>
+            <button id="reset-btn">重置</button>
+        </div>
+    </div>
+    
+    <script src="./js/three.min.js"></script>
+    <script src="./js/OrbitControls.js"></script>
+    <script src="script.js"></script>
+    <script src="js/box.js"></script>
+    <script src="js/ui.js"></script>
+</body>
+</html>
